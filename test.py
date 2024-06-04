@@ -7,20 +7,21 @@ import matplotlib.pyplot as plt
 from metrics import *
 import os
 import time
+from zip import *
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch BasicIRSTD test")
-parser.add_argument("--model_names", default=['ACM', 'ALCNet','DNANet', 'ISNet', 'RDIAN', 'ISTDU-Net'], nargs='+',  
+parser.add_argument("--model_names", default=['DCANet'], nargs='+',  
                     help="model_name: 'ACM', 'ALCNet', 'DNANet', 'ISNet', 'UIUNet', 'RDIAN', 'ISTDU-Net', 'U-Net', 'RISTDnet'")
-parser.add_argument("--pth_dirs", default=None, nargs='+',  help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
+parser.add_argument("--pth_dirs", default=['Dataset-mask/DCANet_800.pth.tar'], nargs='+',  help="checkpoint dir, default=None or ['NUDT-SIRST/ACM_400.pth.tar','NUAA-SIRST/ACM_400.pth.tar']")
 parser.add_argument("--dataset_dir", default='./datasets', type=str, help="train_dataset_dir")
-parser.add_argument("--dataset_names", default=['NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K'], nargs='+', 
+parser.add_argument("--dataset_names", default=['Dataset-mask'], nargs='+', 
                     help="dataset_name: 'NUAA-SIRST', 'NUDT-SIRST', 'IRSTD-1K', 'SIRST3', 'NUDT-SIRST-Sea'")
 parser.add_argument("--img_norm_cfg", default=None, type=dict,
                     help="specific a img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
-parser.add_argument("--img_norm_cfg_mean", default=None, type=float,
+parser.add_argument("--img_norm_cfg_mean", default=107.848, type=float,
                     help="specific a mean value img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
-parser.add_argument("--img_norm_cfg_std", default=None, type=float,
+parser.add_argument("--img_norm_cfg_std", default=30.905, type=float,
                     help="specific a std value img_norm_cfg, default=None (using img_norm_cfg values of each dataset)")
 
 parser.add_argument("--save_img", default=True, type=bool, help="save image of or not")
@@ -61,9 +62,10 @@ def test():
         ### save img
         if opt.save_img == True:
             img_save = transforms.ToPILImage()((pred[0,0,:,:]).cpu())
-            if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
-                os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-            img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
+            if not os.path.exists('./mask'):
+                os.makedirs('./mask')
+            img_save.save('mask' + '/' + img_dir[0] + '.png')
+            zip_folder('mask', 'submission.zip') 
     
     results1 = eval_mIoU.get()
     results2 = eval_PD_FA.get()
