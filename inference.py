@@ -28,6 +28,7 @@ parser.add_argument("--save_img", default=True, type=bool, help="save image of o
 parser.add_argument("--save_img_dir", type=str, default='./results/', help="path of saved image")
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
+parser.add_argument('--base_size', type=int, default=256, help='base image size')
 
 global opt
 opt = parser.parse_args()
@@ -38,7 +39,7 @@ if opt.img_norm_cfg_mean != None and opt.img_norm_cfg_std != None:
   opt.img_norm_cfg['std'] = opt.img_norm_cfg_std
   
 def test(): 
-    test_set = InferenceSetLoader(opt.dataset_dir, opt.train_dataset_name, opt.test_dataset_name, opt.img_norm_cfg)
+    test_set = InferenceSetLoader(opt.dataset_dir, opt.train_dataset_name, opt.test_dataset_name, opt.img_norm_cfg, opt.base_size)
     test_loader = DataLoader(dataset=test_set, num_workers=1, batch_size=1, shuffle=False)
     
     net = Net(model_name=opt.model_name, mode='test').cuda()
@@ -59,6 +60,8 @@ def test():
                 img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
+                size = tuple(t.tolist() for t in size)
+                img_save = img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
     
     print('Inference Done!')
