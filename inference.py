@@ -61,7 +61,7 @@ def test():
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
                 size = tuple(t.tolist() for t in size)
-                img_save = img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
+                img_save = img_save.resize((size[1][0],size[0][0]),Image.BICUBIC)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
     
     print('Inference Done!')
