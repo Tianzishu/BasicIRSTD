@@ -63,7 +63,7 @@ def test():
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
                 size = tuple(t.tolist() for t in size)
                 if size[1][0] > opt.base_size or size[0][0] > opt.base_size:
-                    img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
+                    img_save = img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
             del img, pred, img_save
             torch.cuda.empty_cache()
