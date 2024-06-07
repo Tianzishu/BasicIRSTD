@@ -51,15 +51,15 @@ def test():
     with torch.no_grad():
         for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
             img = Variable(img).cuda()
-            pred = net.forward(img).cpu()
-            pred = pred[:,:,:size[0],:size[1]]        
+            pred0 = net.forward(img).cpu()
+            pred = pred0[:,:,:size[0],:size[1]]        
             ### save img
             if opt.save_img == True:
                 img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
                 if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png') 
-            del img
+            del img, pred, pred0, img_save
             torch.cuda.empty_cache()
     
     print('Inference Done!')
