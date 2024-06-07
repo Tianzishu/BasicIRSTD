@@ -8,7 +8,7 @@ from metrics import *
 import os
 import time
 from tqdm import tqdm
-from PIL.Image import Resampling
+#from PIL.Image import Resampling
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'TRUE'
 parser = argparse.ArgumentParser(description="PyTorch BasicIRSTD Inference without mask")
@@ -55,7 +55,7 @@ def test():
         for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
             img = Variable(img).cuda()
             pred = net.forward(img).cpu()
-            pred = pred[:,:,:size[0],:size[1]].cpu()        
+            pred = pred[:,:,:size[0],:size[1]]       
             ### save img
             if opt.save_img == True:
                 img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
@@ -63,7 +63,7 @@ def test():
                     os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
                 size = tuple(t.tolist() for t in size)
                 if size[1][0] > opt.base_size or size[0][0] > opt.base_size:
-                    img_save = img_save.resize((size[1][0],size[0][0]),Resampling.BILINEAR)
+                    img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
                 img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
             del img, pred, img_save
             torch.cuda.empty_cache()
