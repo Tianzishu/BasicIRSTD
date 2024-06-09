@@ -57,6 +57,9 @@ class Net(nn.Module):
         elif model_name == 'RDIAN':
             self.model = RDIAN()
         
+        self.model = self.model.cuda()
+        self.model = torch.nn.DataParallel(self.model)
+        
     def forward(self, img):
         return self.model(img)
 
