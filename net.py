@@ -28,7 +28,7 @@ class Net(nn.Module):
             else:
                 self.model = DCANet(mode='test')
             print('mode_is=', mode)
-         elif model_name == 'DCAS6Net':
+        elif model_name == 'DCAS6Net':
             if mode == 'train':
                 self.model = DCAS6Net(mode='train')
             else:
