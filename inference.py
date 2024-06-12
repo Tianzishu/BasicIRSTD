@@ -29,7 +29,7 @@ parser.add_argument("--save_img", default=True, type=bool, help="save image of o
 parser.add_argument("--save_img_dir", type=str, default='./results/', help="path of saved image")
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
-parser.add_argument('--base_size', type=int, default=1024, help='base image size')
+parser.add_argument('--base_size', type=int, default=3200, help='base image size')
 
 global opt
 opt = parser.parse_args()

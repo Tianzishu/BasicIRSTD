@@ -28,6 +28,12 @@ class Net(nn.Module):
             else:
                 self.model = DCANet(mode='test')
             print('mode_is=', mode)
+         elif model_name == 'DCAS6Net':
+            if mode == 'train':
+                self.model = DCAS6Net(mode='train')
+            else:
+                self.model = DCAS6Net(mode='test')
+            print('mode_is=', mode)
         elif model_name == 'DNANet_BY':
             if mode == 'train':
                 self.model = DNAnet_BY(mode='train')
