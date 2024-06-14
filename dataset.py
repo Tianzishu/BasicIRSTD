@@ -102,9 +102,7 @@ class InferenceSetLoader(Dataset):
             img = img.resize((1024, 1024))
         elif w <= 2048 or h <= 2048:
             img = img.resize((2048, 2048))
-        elif w <= 3072 or h <= 3072:
-            img = img.resize((2048, 2048))
-        elif w > self.base_size or h > self.base_size:
+        else:
             img = img.resize((2048, 2048))
             
         img = Normalized(np.array(img, dtype=np.float32), self.img_norm_cfg)
