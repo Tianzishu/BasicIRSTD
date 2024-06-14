@@ -9,3 +9,4 @@ from model.ISTDUNet.model_ISTDUNet import ISTDU_Net as ISTDU_Net
 from model.RDIAN.model_RDIAN import RDIAN as RDIAN
 from model.DCANet.model_DCANet import DCANet as DCANet
 from model.DCANet.model_DCANet import DCANet_S6 as DCAS6Net
+from model.DCANet.model_DCANet import DCANet_S7 as DCAS7Net
