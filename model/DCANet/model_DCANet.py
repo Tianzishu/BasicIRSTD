@@ -777,7 +777,7 @@ class DCANet_S6(nn.Module):
 
 
 class DCANet_S7(nn.Module):
-    def __init__(self, num_classes=1, input_channels=1, block=Res_SimAM_block, num_blocks=[3, 4, 6, 3],
+    def __init__(self, num_classes=1, input_channels=1, block=Res_SimAM_block, num_blocks=[2, 2, 2, 2],
                  nb_filter=[16, 32, 64, 128, 256, 512, 1024], deep_supervision=True, mode='test'):
         super(DCANet_S7, self).__init__()
         self.mode = mode
