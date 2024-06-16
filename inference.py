@@ -67,10 +67,10 @@ def test():
                     save_path = os.path.join(opt.save_img_dir, opt.test_dataset_name, opt.model_name)
                     if not os.path.exists(save_path):
                         os.makedirs(save_path)
-                    #size = tuple(t.item() for t in size)
-                    #if size[1] > opt.base_size or size[0] > opt.base_size:
+                    size = tuple(t.item() for t in size)
+                    if size[1] > opt.base_size or size[0] > opt.base_size:
                         #print('resize')
-                    #    img_save = img_save.resize((size[1], size[0]), Image.BILINEAR)
+                        img_save = img_save.resize((size[1], size[0]), Image.BILINEAR)
                     img_save_path = os.path.join(save_path, img_dir[0] + '.png')
                     img_save.save(img_save_path)
                 del img, pred, img_save
