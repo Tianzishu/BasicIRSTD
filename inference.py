@@ -29,7 +29,7 @@ parser.add_argument("--save_img", default=True, type=bool, help="save image of o
 parser.add_argument("--save_img_dir", type=str, default='./results/', help="path of saved image")
 parser.add_argument("--save_log", type=str, default='./log/', help="path of saved .pth")
 parser.add_argument("--threshold", type=float, default=0.5)
-parser.add_argument('--base_size', type=int, default=3200, help='base image size')
+parser.add_argument('--base_size', type=int, default=4400, help='base image size')
 
 global opt
 opt = parser.parse_args()
@@ -51,22 +51,30 @@ def test():
         net.load_state_dict(torch.load(opt.pth_dir, map_location=device)['state_dict'])
     net.eval()
     
-    with torch.no_grad():
-        for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
-            img = Variable(img).cuda()
-            pred = net.forward(img).cpu()
-            pred = pred[:,:,:size[0],:size[1]]       
-            ### save img
-            if opt.save_img == True:
-                img_save = transforms.ToPILImage()(((pred[0,0,:,:]>opt.threshold).float()).cpu())
-                if not os.path.exists(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name):
-                    os.makedirs(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name)
-                #size = tuple(t.tolist() for t in size)
-                #if size[1][0] > opt.base_size or size[0][0] > opt.base_size:
-                #img_save = img_save.resize((size[1][0],size[0][0]),Image.BILINEAR)
-                img_save.save(opt.save_img_dir + opt.test_dataset_name + '/' + opt.model_name + '/' + img_dir[0] + '.png')  
-            del img, pred, img_save
-            torch.cuda.empty_cache()
+    with torch.cuda.amp.autocast():
+        with torch.no_grad():
+            for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
+                img = Variable(img).cuda()
+                
+                with torch.cuda.amp.autocast():
+                        pred = net.forward(img).cpu()
+                        
+                #pred = net.forward(img).cpu()
+                pred = pred[:,:,:size[0],:size[1]].cpu()       
+                ### save img
+                if opt.save_img:
+                    img_save = transforms.ToPILImage()((pred[0, 0, :, :] > opt.threshold).float())
+                    save_path = os.path.join(opt.save_img_dir, opt.test_dataset_name, opt.model_name)
+                    if not os.path.exists(save_path):
+                        os.makedirs(save_path)
+                    #size = tuple(t.item() for t in size)
+                    #if size[1] > opt.base_size or size[0] > opt.base_size:
+                        #print('resize')
+                    #    img_save = img_save.resize((size[1], size[0]), Image.BILINEAR)
+                    img_save_path = os.path.join(save_path, img_dir[0] + '.png')
+                    img_save.save(img_save_path)
+                del img, pred, img_save
+                torch.cuda.empty_cache()
     
     print('Inference Done!')
    
