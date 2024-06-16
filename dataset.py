@@ -92,21 +92,9 @@ class InferenceSetLoader(Dataset):
         except:
             img = Image.open((self.dataset_dir + '/images/' + self.test_list[idx] + '.bmp').replace('//','/')).convert('I')
         
-        w,h = img.size
-
-        if w <= 256 or h <= 256:
-            img = img.resize((256, 256))
-        elif w <= 512 or h <= 512:
-            img = img.resize((512, 512))
-        elif w <= 1024 or h <= 1024:
-            img = img.resize((1024, 1024))
-        elif w <= 2048 or h <= 2048:
-            img = img.resize((2048, 2048))
-        else:
-            img = img.resize((2048, 2048))
             
         img = Normalized(np.array(img, dtype=np.float32), self.img_norm_cfg)
-        
+        h, w = img.shape
             
         img = PadImg(img)
         

@@ -73,7 +73,7 @@ class Res_SimAM_block(nn.Module):
 
 
 class DCANet(nn.Module):
-    def __init__(self, num_classes=1, input_channels=1, block=Res_SimAM_block, num_blocks=[3, 4, 6, 3], nb_filter=[16,32, 64, 128, 256], deep_supervision=True, mode='test'):
+    def __init__(self, num_classes=1, input_channels=1, block=Res_SimAM_block, num_blocks=[3, 4, 6, 3], nb_filter=[4, 8, 16, 32, 64], deep_supervision=True, mode='test'):
         super(DCANet, self).__init__()
         self.mode = mode
         self.fmap_block = dict()  # 装feature map
@@ -139,7 +139,7 @@ class DCANet(nn.Module):
             self.final = nn.Conv2d(nb_filter[0], num_classes, kernel_size=1)
 
         #self.final4.register_backward_hook(self.save_grad)
-        print('1'*50)
+        #print('1'*50)
 
     def save_grad(self, module, grad_input, grad_output):
         self.grad_block['final2_gradin'] = grad_input
