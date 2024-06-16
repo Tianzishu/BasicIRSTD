@@ -57,13 +57,13 @@ def test():
                 img = Variable(img).cuda()
                 
                 with torch.cuda.amp.autocast():
-                        pred = net.forward(img).cpu()
+                    pred = net.forward(img).cpu()
                         
                 #pred = net.forward(img).cpu()
                 pred = pred[:,:,:size[0],:size[1]].cpu()       
                 ### save img
                 if opt.save_img:
-                    img_save = transforms.ToPILImage()((pred[0, 0, :, :] > opt.threshold).float())
+                    img_save = transforms.ToPILImage()(((pred[0, 0, :, :] > opt.threshold).float()).cpu())
                     save_path = os.path.join(opt.save_img_dir, opt.test_dataset_name, opt.model_name)
                     if not os.path.exists(save_path):
                         os.makedirs(save_path)
