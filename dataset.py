@@ -96,8 +96,8 @@ class InferenceSetLoader(Dataset):
         img = Normalized(np.array(img, dtype=np.float32), self.img_norm_cfg)
         h, w = img.shape
         
-        if w > self.base_size or h > self.base_size:
-            img.resize((self.base_size, self.base_size))
+        #if w > self.base_size or h > self.base_size:
+        #    img.resize((self.base_size, self.base_size))
             
         img = PadImg(img)
         

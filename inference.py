@@ -51,30 +51,30 @@ def test():
         net.load_state_dict(torch.load(opt.pth_dir, map_location=device)['state_dict'])
     net.eval()
     
-    with torch.cuda.amp.autocast():
-        with torch.no_grad():
-            for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
-                img = Variable(img).cuda()
-                
-                with torch.cuda.amp.autocast():
-                    pred = net.forward(img).cpu()
-                        
-                #pred = net.forward(img).cpu()
-                pred = pred[:,:,:size[0],:size[1]].cpu()       
-                ### save img
-                if opt.save_img:
-                    img_save = transforms.ToPILImage()(((pred[0, 0, :, :] > opt.threshold).float()).cpu())
-                    save_path = os.path.join(opt.save_img_dir, opt.test_dataset_name, opt.model_name)
-                    if not os.path.exists(save_path):
-                        os.makedirs(save_path)
-                    size = tuple(t.item() for t in size)
-                    if size[1] > opt.base_size or size[0] > opt.base_size:
-                        #print('resize')
-                        img_save = img_save.resize((size[1], size[0]), Image.BILINEAR)
-                    img_save_path = os.path.join(save_path, img_dir[0] + '.png')
-                    img_save.save(img_save_path)
-                del img, pred, img_save
-                torch.cuda.empty_cache()
+    #with torch.cuda.amp.autocast():
+    with torch.no_grad():
+        for idx_iter, (img, size, img_dir) in tqdm(enumerate(test_loader)):
+            img = Variable(img).cuda()
+            
+            #with torch.cuda.amp.autocast():
+            #    pred = net.forward(img).cpu()
+                    
+            pred = net.forward(img).cpu()
+            pred = pred[:,:,:size[0],:size[1]].cpu()       
+            ### save img
+            if opt.save_img:
+                img_save = transforms.ToPILImage()(((pred[0, 0, :, :] > opt.threshold).float()).cpu())
+                save_path = os.path.join(opt.save_img_dir, opt.test_dataset_name, opt.model_name)
+                if not os.path.exists(save_path):
+                    os.makedirs(save_path)
+                #size = tuple(t.item() for t in size)
+                #if size[1] > opt.base_size or size[0] > opt.base_size:
+                    #print('resize')
+                #    img_save = img_save.resize((size[1], size[0]), Image.BILINEAR)
+                img_save_path = os.path.join(save_path, img_dir[0] + '.png')
+                img_save.save(img_save_path)
+            del img, pred, img_save
+            torch.cuda.empty_cache()
     
     print('Inference Done!')
    
